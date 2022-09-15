@@ -3,23 +3,39 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 function App() {
-  const [counter, setCounter] = useState(100);
+  const [counter, setCounter] = useState(0);
 
   //controlled input
   //connect the value with state variable
   const [inputVal, setInputVal] = useState("");
-
+  //Start counter button
+  const [counterIs, setCounterIs] = useState(false);
   
 // fire once , on begining
   useEffect(() => {
-    localStorage.getItem("counter"); 
+   const counterLocalStorage = Number (localStorage.getItem("counter")); 
+   if (counterLocalStorage){
+    setCounter(counterLocalStorage);
+   }
     }, []);
 
 
 //save Number 
-useEffect(() => {
+/* useEffect(() => {
 localStorage.setItem("counter", counter.toString()); 
-}, [counter]);
+}, [counter]); */
+
+//Start Button
+useEffect(() =>{
+if (counterIs){
+ const timerInterval = setInterval(()=>{
+    setCounter(counter + 1);
+  }, 1000);
+  return()=>{
+    clearInterval(timerInterval);
+  }
+}
+}, [counter, counterIs]);
 
 
 //make the code more dry
@@ -43,6 +59,11 @@ if (isNaN(value)){
 }
 }
 
+// Start counting
+const handleCounting = () =>{
+setCounterIs(!counterIs);
+};
+
   return (
     <div className="App">
      <h1> React Counter</h1>
@@ -59,7 +80,10 @@ if (isNaN(value)){
   <button onClick={handleUpdateValue}>Update</button>
 </div>
 
-
+<div>
+  <button onClick={handleCounting}>
+   {counterIs ? "Stop" : "Start"} Counter</button>
+</div>
 
     </div>
 
